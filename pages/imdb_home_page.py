@@ -15,14 +15,14 @@ class ImdbHomePage:
         """
         from selenium.webdriver.common.keys import Keys
 
-        # Intentar selector moderno
+        
         search_input = None
         try:
             search_input = self.wait.until(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, "input#suggestion-search, input[name='q']"))
             )
         except TimeoutException:
-            # Fallback más amplio: tomar el primer input visible
+            
             inputs = self.driver.find_elements(By.TAG_NAME, "input")
             for inp in inputs:
                 if inp.is_displayed() and inp.get_attribute("type") in (None, "text", "search"):
@@ -35,14 +35,14 @@ class ImdbHomePage:
         search_input.clear()
         search_input.send_keys(movie_name)
 
-        # Intentar presionar Enter para ir a resultados
+        
         try:
             search_input.send_keys(Keys.ENTER)
         except Exception:
             try:
                 search_input.submit()
             except Exception:
-                pass  # si no se puede enviar, confiar en sugerencias que se mostrarán
+                pass  
 
     def click_first_result(self):
         """
@@ -63,13 +63,13 @@ class ImdbHomePage:
         last_exception = None
         for sel in selectors:
             try:
-                # intentar esperar y clicar el primer elemento clicable del selector
+                
                 el = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, sel)))
                 el.click()
                 return
             except Exception as e:
                 last_exception = e
-                # fallback: intentar obtener todos los elementos y clicar el primero visible
+                
                 try:
                     elements = self.driver.find_elements(By.CSS_SELECTOR, sel)
                     for e2 in elements:
@@ -82,5 +82,5 @@ class ImdbHomePage:
                 except Exception:
                     continue
 
-        # Si llega aquí, no se pudo clicar ningún elemento útil
+        
         raise AssertionError("No se pudo clicar el primer resultado de IMDb") from last_exception

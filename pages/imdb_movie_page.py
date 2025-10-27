@@ -9,7 +9,7 @@ class ImdbMoviePage:
         self.wait = WebDriverWait(driver, timeout)
 
     def wait_for_title(self):
-        # Espera que alguna forma del título esté visible
+        
         selectors = [
             "h1[data-testid='hero-title-block__title']",
             "div.title_wrapper > h1",
@@ -28,9 +28,9 @@ class ImdbMoviePage:
         Recupera el título de la película usando varios selectores como fallback.
         """
         selectors = [
-            "h1[data-testid='hero-title-block__title']",   # diseño moderno
-            "div.title_wrapper > h1",                       # diseño clásico
-            "h1"                                            # fallback genérico
+            "h1[data-testid='hero-title-block__title']",   
+            "div.title_wrapper > h1",                       
+            "h1"                                            
         ]
         for sel in selectors:
             try:
@@ -48,18 +48,18 @@ class ImdbMoviePage:
         Devuelve la calificación como string (por ejemplo '8.2').
         """
         selectors = [
-            "div[data-testid='hero-rating-bar__aggregate-rating__score'] span",  # diseño moderno
-            "span[itemprop='ratingValue']",                                      # diseño clásico
-            "div.ratingValue > strong > span"                                    # otro fallback
+            "div[data-testid='hero-rating-bar__aggregate-rating__score'] span",  
+            "span[itemprop='ratingValue']",                                      
+            "div.ratingValue > strong > span"                                    
         ]
         for sel in selectors:
             try:
                 el = self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, sel)))
                 text = el.text
                 if text:
-                    # Normalizar: quitar espacios y posibles barras
+                    
                     return text.strip()
             except Exception:
                 continue
-        # Si no hay rating visible, devolver cadena vacía
+        
         return ""
